@@ -19,7 +19,7 @@ We’re less interested in “just making it work” and more interested in unde
 
 If anything in the brief is unclear, please don’t hesitate to ask clarifying questions, we’re happy to provide additional context. We will not give out details on how you should implement this.
 
-## A Note About the Current Codebase
+## A note about the current codebase
 
 This project is intentionally provided in an outdated and suboptimal state by default.
 

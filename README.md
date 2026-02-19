@@ -1,3 +1,38 @@
+# Before you begin
+
+Before you start, we want to clarify expectations to ensure this assignment is a valuable use of your time and ours.
+
+There is no time constraint on this task. We’re not evaluating how quickly you can produce something - we’re evaluating how you think and how you build.
+
+The assignment itself is intentionally simple and narrowly scoped. However, we expect your solution to reflect a production-ready mindset.
+
+When reviewing your submission, we will focus on:
+
+* Clear structure and sound architecture
+* Thoughtful abstractions
+* Good naming, readability, and maintainability
+* Handling of edge cases
+* Sensible trade-offs and reasoning
+* Code quality that would scale in a larger application
+
+We’re less interested in “just making it work” and more interested in understanding how you approach building something clean, extensible, and robust. The devil is in the details and that is very important to us.
+
+If anything in the brief is unclear, please don’t hesitate to ask clarifying questions, we’re happy to provide additional context. We will not give out details on how you should implement this.
+
+## A note about the current codebase
+
+This project is intentionally provided in an outdated and suboptimal state by default.
+
+Parts of the structure, patterns, and implementation choices may feel old, inconsistent, or poorly organized. This is deliberate. The goal is not only to implement the required feature, but also to:
+
+* Identify structural issues
+* Improve readability and maintainability
+* Apply modern best practices where appropriate
+
+Make thoughtful decisions about what should (and should not) be refactored
+
+You are free to refactor, restructure, or modernize the project as you see fit, as long as you can clearly explain your reasoning and trade-offs during the technical discussion.
+
 ## Installation
 
 This project is based on NextJS 13, and requires node 16.13.0 or higher.

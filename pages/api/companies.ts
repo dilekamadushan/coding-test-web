@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
+import { CompaniesApiResponse } from "../../types/companies";
 
 const data = {
   data: [
@@ -185,8 +186,8 @@ const data = {
 };
 
 export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<any>
+  _: NextApiRequest,
+  res: NextApiResponse<CompaniesApiResponse>,
 ) {
   res.status(200).json(data);
 }

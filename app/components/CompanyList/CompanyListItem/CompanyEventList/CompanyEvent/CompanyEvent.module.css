@@ -1,0 +1,29 @@
+.event {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  background: #f8f8f8;
+  border-radius: 6px;
+}
+
+.eventTitle {
+  color: #111;
+  font-size: 0.8125rem;
+}
+
+.eventMeta {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.link {
+  color: #0066cc;
+  text-decoration: underline;
+  font-size: 0.75rem;
+  word-break: break-all;
+}
+
+.link:hover {
+  color: #004499;
+}

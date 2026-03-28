@@ -3,6 +3,9 @@
 import { Inter } from "@next/font/google";
 import { useEffect, useState } from "react";
 import { Company } from "../types/companies";
+import CompanyList from "./components/CompanyList/CompanyList";
+import LoadingIndicator from "./components/LoadingIndicator/LoadingIndicator";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import { fetchCompanies } from "../services/companies";
 const latinFont = Inter({ subsets: ["latin"] });
 
@@ -28,23 +31,13 @@ export default function Home() {
       });
   }, []);
 
-  return (
-    <main className={latinFont.className}>
-      <h2>Quartr</h2>
-      <p>Trending companies</p>
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+  const renderContent = () => {
+    if (loading) return <LoadingIndicator />;
 
-      {!loading && !error && (
-        <ul>
-          {companies.map((company) => (
-            <li key={company.companyId}>
-              <strong>{company.displayName}</strong> ({company.companyTicker})
-              &mdash; {company.companyCountry}
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
-  );
+    if (error) return <ErrorMessage message={error} />;
+
+    return <CompanyList companies={companies} />;
+  };
+
+  return <main className={latinFont.className}>{renderContent()}</main>;
 }

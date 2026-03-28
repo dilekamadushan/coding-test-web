@@ -1,0 +1,33 @@
+.panel {
+  display: none;
+  padding: 0 16px 16px 68px;
+  background: #fff;
+}
+
+.panelOpen {
+  display: flex;
+  flex-direction: column;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 16px;
+  font-size: 0.8125rem;
+}
+
+.detailRow {
+  display: contents;
+}
+
+
+.details dt {
+  color: #555;
+  white-space: nowrap;
+}
+
+.details dd {
+  color: #333;
+  word-break: break-word;
+}
+

@@ -41,7 +41,7 @@ describe("Home Page", () => {
     });
 
     expect(screen.getAllByText(/OKEA/).length).toBeGreaterThan(0);
-    expect(screen.getByText(/Magnora/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Magnora/)[0]).toBeInTheDocument();
   });
 
   describe("Error Handling", () => {

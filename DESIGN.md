@@ -8,7 +8,8 @@ Changes were delivered in separate pull requests:
 1. [Project structure overview](#1-project-structure-overview)
 2. [TypeScript interfaces for the domain model](#2-typescript-interfaces-for-the-domain-model)
 3. [Dependency changes](#3-dependency-changes)
-4. [Assumptions](#4-assumptions)
+4. [Code comments](#code-comments)
+5. [Assumptions](#4-assumptions)
 
 ## 1. Project structure overview
 
@@ -112,6 +113,11 @@ CSS Modules over Tailwind/Bootstrap:
 - Built into Next.js — no extra packages or PostCSS config
 
 Inter (latin) is loaded in `layout.tsx` so it applies to the whole app, not per-page.
+
+### Code comments
+
+- **`useRef` over `useState`** — a one-liner above `searchQueryRef` explains the choice to avoid a re-render.
+- **`useEffect` empty dependency array** — an inline `eslint-disable` comment explains that `searchCompanies` is intentionally omitted to prevent an infinite fetch loop on every render.
 
 ### Tests
 

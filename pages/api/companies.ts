@@ -24,7 +24,7 @@ export default function handler(
 
   const { companies, totalCount, totalPages } = getCompanies(searchQuery, page, limit);
 
-  if (companies.length === 0)
+  if (totalCount === 0)
     return res.status(HTTP_STATUS.NOT_FOUND).json({ data: { companies: [], totalCount, totalPages } });
 
   res.status(HTTP_STATUS.OK).json({ data: { companies, totalCount, totalPages } });

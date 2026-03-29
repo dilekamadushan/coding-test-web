@@ -58,8 +58,10 @@ export default function Companies() {
     searchCompanies(searchQueryRef.current, DEFAULT_PAGE_NUMBER, nextPageSize);
   };
 
+  // fetch once on mount only
   useEffect(() => {
     searchCompanies();
+   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderContent = () => {

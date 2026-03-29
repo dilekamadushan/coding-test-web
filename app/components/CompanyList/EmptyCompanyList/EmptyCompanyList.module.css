@@ -1,0 +1,9 @@
+.wrapper {
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.message {
+  color: #6b7280;
+  font-size: 0.9375rem;
+}

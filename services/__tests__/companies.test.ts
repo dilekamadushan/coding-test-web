@@ -19,23 +19,43 @@ describe("getCompanies", () => {
   });
 
   describe("when the API call is successful", () => {
-    it("returns an array of companies with expected properties", async () => {
-      const apiResponse = await fetchCompanies();
+    describe("when an empty string query is provided (initial load)", () => {
+      it("calls the API without search params", async () => {
+        (global.fetch as jest.Mock).mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ data: companies }),
+        });
 
-      expect(Array.isArray(apiResponse.data)).toBe(true);
-      expect(apiResponse.data.length).toEqual(5);
+        const apiResponse = await fetchCompanies("");
 
-      for (const company of apiResponse.data) {
-        expect(company).toHaveProperty("companyId");
-        expect(company).toHaveProperty("companyName");
-        expect(company).toHaveProperty("displayName");
-        expect(company).toHaveProperty("companyCountry");
-        expect(company).toHaveProperty("companyTicker");
-        expect(company).toHaveProperty("events");
-        expect(Array.isArray(company.events)).toBe(true);
-      }
+        expect(global.fetch).toHaveBeenCalledWith("/api/companies");
 
-      expect(global.fetch).toHaveBeenCalledWith("/api/companies");
+        expect(Array.isArray(apiResponse.data)).toBe(true);
+        expect(apiResponse.data.length).toEqual(5);
+
+        for (const company of apiResponse.data) {
+          expect(company).toHaveProperty("companyId");
+          expect(company).toHaveProperty("companyName");
+          expect(company).toHaveProperty("displayName");
+          expect(company).toHaveProperty("companyCountry");
+          expect(company).toHaveProperty("companyTicker");
+          expect(company).toHaveProperty("events");
+          expect(Array.isArray(company.events)).toBe(true);
+        }
+      });
+    });
+
+    describe("when a search query is provided", () => {
+      it("calls the API with the search param", async () => {
+        (global.fetch as jest.Mock).mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ data: [] }),
+        });
+
+        await fetchCompanies("okea");
+
+        expect(global.fetch).toHaveBeenCalledWith("/api/companies?search=okea");
+      });
     });
   });
 
@@ -62,4 +82,18 @@ describe("getCompanies", () => {
       expect(jsonMock).not.toHaveBeenCalled();
     });
   });
+
+    describe("when the API returns 404", () => {
+      it("returns empty data without throwing", async () => {
+        (global.fetch as jest.Mock).mockResolvedValueOnce({
+          ok: false,
+          status: 404,
+          json: jest.fn(),
+        });
+
+        const result = await fetchCompanies("zzznomatch");
+
+        expect(result).toEqual({ data: [] });
+      });
+    });
 });

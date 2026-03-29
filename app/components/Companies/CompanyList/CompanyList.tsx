@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Company } from "../../../types/companies";
+import { Company } from "../../../../types/companies";
 import CompanyListItem from "./CompanyListItem/CompanyListItem";
-import CompanyListTitle from "../CompanyListTitle/CompanyListTitle";
+import CompanyListTitle from "./CompanyListTitle/CompanyListTitle";
 import EmptyCompanyList from "./EmptyCompanyList/EmptyCompanyList";
 import styles from "./CompanyList.module.css";
 

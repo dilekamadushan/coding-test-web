@@ -1,6 +1,6 @@
 // Real data from data/companies.ts is used — see CompanyListItem.test.tsx for rationale.
 import { render, screen } from "@testing-library/react";
-import CompanyItemPanel from "../../../../../components/CompanyList/CompanyListItem/CompanyItemPanel/CompanyItemPanel";
+import CompanyItemPanel from "../../../../../components/Companies/CompanyList/CompanyListItem/CompanyItemPanel/CompanyItemPanel";
 import { companies } from "../../../../../../data/companies";
 
 const company = companies[0];

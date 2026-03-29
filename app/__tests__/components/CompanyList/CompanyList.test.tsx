@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import CompanyList from "../../../components/CompanyList/CompanyList";
+import CompanyList from "../../../components/Companies/CompanyList/CompanyList";
 import { companies } from "../../../../data/companies";
 
 describe("CompanyList", () => {

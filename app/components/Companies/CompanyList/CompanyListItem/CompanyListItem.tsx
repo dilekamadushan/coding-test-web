@@ -1,4 +1,4 @@
-import { Company } from "../../../../types/companies";
+import { Company } from "../../../../../types/companies";
 import CompanyItemIcon from "./CompanyItemIcon/CompanyItemIcon";
 import CompanyItemPanel from "./CompanyItemPanel/CompanyItemPanel";
 import styles from "./CompanyListItem.module.css";

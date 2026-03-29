@@ -32,6 +32,13 @@ export interface Company {
   isins: string[];
 }
 
-export interface CompaniesApiResponse {
-  data: Company[];
+export interface CompaniesPagination {
+  companies: Company[];
+  totalCount: number;
+  totalPages: number;
+}
+
+/* reuseable type for API response */
+export interface ApiResponse<T> {
+  data: T;
 }

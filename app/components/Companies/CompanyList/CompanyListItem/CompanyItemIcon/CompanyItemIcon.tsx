@@ -1,3 +1,4 @@
+import Image from "next/image";
 import styles from "./CompanyItemIcon.module.css";
 
 interface CompanyItemIconProps {
@@ -14,7 +15,7 @@ export default function CompanyItemIcon({
   return (
     <span className={styles.iconWrapper}>
       {iconUrl ? (
-        <img
+        <Image
           src={iconUrl}
           alt={`${displayName} logo`}
           className={styles.icon}

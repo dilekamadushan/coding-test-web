@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import CompanyItemIcon from "../../../../../components/CompanyList/CompanyListItem/CompanyItemIcon/CompanyItemIcon";
+import CompanyItemIcon from "../../../../../components/Companies/CompanyList/CompanyListItem/CompanyItemIcon/CompanyItemIcon";
 
 describe("CompanyItemIcon", () => {
   it("renders an img with alt text when iconUrl is provided", () => {

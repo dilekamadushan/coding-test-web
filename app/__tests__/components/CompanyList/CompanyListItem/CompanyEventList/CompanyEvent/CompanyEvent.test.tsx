@@ -1,6 +1,6 @@
 // Real data from data/companies.ts is used — see CompanyListItem.test.tsx for rationale.
 import { render, screen } from "@testing-library/react";
-import CompanyEvent from "../../../../../../components/CompanyList/CompanyListItem/CompanyEventList/CompanyEvent/CompanyEvent";
+import CompanyEvent from "../../../../../../components/Companies/CompanyList/CompanyListItem/CompanyEventList/CompanyEvent/CompanyEvent";
 import { companies } from "../../../../../../../data/companies";
 
 const event = companies[0].events[0];

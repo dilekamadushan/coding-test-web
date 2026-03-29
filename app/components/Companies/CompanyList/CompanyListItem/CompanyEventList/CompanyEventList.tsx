@@ -1,4 +1,4 @@
-import { Event } from "../../../../../types/companies";
+import { Event } from "../../../../../../types/companies";
 import CompanyEvent from "./CompanyEvent/CompanyEvent";
 import styles from "./CompanyEventList.module.css";
 

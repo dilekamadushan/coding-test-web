@@ -8,7 +8,7 @@ describe("getCompanies", () => {
         ok: true,
         json: () =>
           Promise.resolve({
-            data: companies,
+            data: { companies: companies },
           }),
       }),
     ) as jest.Mock;
@@ -20,20 +20,22 @@ describe("getCompanies", () => {
 
   describe("when the API call is successful", () => {
     describe("when an empty string query is provided (initial load)", () => {
-      it("calls the API without search params", async () => {
+      it("calls the API with only the page param", async () => {
         (global.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve({ data: companies }),
+          json: () => Promise.resolve({ data: { companies: companies } }),
         });
 
         const apiResponse = await fetchCompanies("");
 
-        expect(global.fetch).toHaveBeenCalledWith("/api/companies");
+        expect(global.fetch).toHaveBeenCalledWith(
+          "/api/companies?page=1&limit=3",
+        );
 
-        expect(Array.isArray(apiResponse.data)).toBe(true);
-        expect(apiResponse.data.length).toEqual(5);
+        expect(Array.isArray(apiResponse.companies)).toBe(true);
+        expect(apiResponse.companies.length).toEqual(5);
 
-        for (const company of apiResponse.data) {
+        for (const company of apiResponse.companies) {
           expect(company).toHaveProperty("companyId");
           expect(company).toHaveProperty("companyName");
           expect(company).toHaveProperty("displayName");
@@ -49,12 +51,44 @@ describe("getCompanies", () => {
       it("calls the API with the search param", async () => {
         (global.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve({ data: [] }),
+          json: () => Promise.resolve({ data: { companies: [] } }),
         });
 
         await fetchCompanies("okea");
 
-        expect(global.fetch).toHaveBeenCalledWith("/api/companies?search=okea");
+        expect(global.fetch).toHaveBeenCalledWith(
+          "/api/companies?page=1&search=okea&limit=3",
+        );
+      });
+    });
+
+    describe("when a page number is provided", () => {
+      it("includes the page as a query param", async () => {
+        (global.fetch as jest.Mock).mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ data: { companies: [] } }),
+        });
+
+        await fetchCompanies(undefined, 2);
+
+        expect(global.fetch).toHaveBeenCalledWith(
+          "/api/companies?page=2&limit=3",
+        );
+      });
+    });
+
+    describe("when a limit is provided", () => {
+      it("includes the limit as a query param", async () => {
+        (global.fetch as jest.Mock).mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ data: { companies: [] } }),
+        });
+
+        await fetchCompanies(undefined, 1, 5);
+
+        expect(global.fetch).toHaveBeenCalledWith(
+          "/api/companies?page=1&limit=5",
+        );
       });
     });
   });
@@ -78,22 +112,27 @@ describe("getCompanies", () => {
         "Failed to load companies, Please try again",
       );
 
-      expect(global.fetch).toHaveBeenCalledWith("/api/companies");
+      expect(global.fetch).toHaveBeenCalledWith(
+        "/api/companies?page=1&limit=3",
+      );
       expect(jsonMock).not.toHaveBeenCalled();
     });
   });
 
     describe("when the API returns 404", () => {
       it("returns empty data without throwing", async () => {
+        const emptyMeta = { totalCount: 0, totalPages: 0 };
         (global.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 404,
-          json: jest.fn(),
+          json: jest.fn().mockResolvedValue({ data: { companies: [], ...emptyMeta } }),
         });
 
         const result = await fetchCompanies("zzznomatch");
 
-        expect(result).toEqual({ data: [] });
+        expect(result.companies).toEqual([]);
+        expect(result.totalCount).toBe(0);
+        expect(result.totalPages).toBe(0);
       });
     });
 });

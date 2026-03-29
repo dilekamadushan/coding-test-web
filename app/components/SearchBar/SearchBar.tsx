@@ -22,7 +22,7 @@ export default function SearchBar({
     };
   }, []);
 
-  const handleUserInput = (event: { target: { value: string } }) => {
+  const handleUserInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setSearchInput(newValue);
     if (timerRef.current) clearTimeout(timerRef.current);

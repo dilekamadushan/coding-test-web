@@ -65,9 +65,9 @@ types/
 All layers import from `types/` — so field rename is caught by the compiler everywhere at once.
 
 - `Company` — core entity used by every layer
-- `CompaniesResponse` — shared by the API handler and the service, keeping them in sync
+- `ApiResponse<T>` — reusable interface to handle API response
 
-Optional fields (`iconUrl`, `qnaTimestamp`) are typed as `string | null` rather than `?`, so consumers are forced to handle the null case.
+Optional fields (`iconUrl`, `qnaTimestamp`) are typed as `string | null` rather than `?`, so consumers need to handle the null case.
 ---
 
 ### State co-location

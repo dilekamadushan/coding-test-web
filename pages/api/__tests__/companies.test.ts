@@ -18,7 +18,32 @@ function buildMockRes() {
   return res as typeof res & { statusCode: number; body: CompaniesApiResponse };
 }
 
-const req = {} as NextApiRequest;
+const req = { query: {} } as unknown as NextApiRequest;
+
+describe("GET /api/companies with search query", () => {
+  it("filters results by search query", () => {
+    const res = buildMockRes();
+    const searchReq = {
+      query: { search: "okea" },
+    } as unknown as NextApiRequest;
+    handler(searchReq, res);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data).toHaveLength(1);
+    expect(res.body.data[0].companyName).toBe("OKEA");
+  });
+
+  it("returns 404 when search query has no matches", () => {
+    const res = buildMockRes();
+    const searchReq = {
+      query: { search: "zzznomatch" },
+    } as unknown as NextApiRequest;
+    handler(searchReq, res);
+
+    expect(res.statusCode).toBe(404);
+    expect(res.body.data).toHaveLength(0);
+  });
+});
 
 describe("GET /api/companies", () => {
   it("responds with valid json with expected properties", () => {

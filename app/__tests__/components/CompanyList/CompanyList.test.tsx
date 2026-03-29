@@ -18,6 +18,14 @@ describe("CompanyList", () => {
     });
   });
 
+  describe("empty state", () => {
+    it("shows a no results message when the companies list is empty", () => {
+      render(<CompanyList companies={[]} />);
+
+      expect(screen.getByText(/no results found/i)).toBeInTheDocument();
+    });
+  });
+
   describe("expand / collapse", () => {
     it("expands an item when its button is clicked", () => {
       render(<CompanyList companies={companies} />);

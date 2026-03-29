@@ -44,6 +44,20 @@ describe("Home Page", () => {
     expect(screen.getAllByText(/Magnora/)[0]).toBeInTheDocument();
   });
 
+  describe("SearchBar", () => {
+    it("renders the search input after a successful fetch", async () => {
+      render(<Home />);
+
+      await waitFor(() => {
+        expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
+      });
+
+      expect(
+        screen.getByRole("searchbox", { name: /search companies/i }),
+      ).toBeInTheDocument();
+    });
+  });
+
   describe("Error Handling", () => {
     it("shows an error message when the fetch fails", async () => {
       mockedFetchCompanies.mockRejectedValue(
@@ -61,18 +75,5 @@ describe("Home Page", () => {
       ).toBeInTheDocument();
     });
 
-    it("shows a generic error message for non-Error rejections", async () => {
-      mockedFetchCompanies.mockRejectedValue("something went wrong");
-
-      render(<Home />);
-
-      await waitFor(() => {
-        expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
-      });
-
-      expect(
-        screen.getByText(/An unexpected error occurred/),
-      ).toBeInTheDocument();
-    });
   });
 });

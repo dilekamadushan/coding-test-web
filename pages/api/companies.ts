@@ -1,13 +1,17 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { CompaniesApiResponse } from "../../types/companies";
 import { getCompanies } from "../../lib/companies";
+import { HTTP_STATUS } from "../../constants";
 
 export default function handler(
-  _: NextApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse<CompaniesApiResponse>,
 ) {
-  const companies = getCompanies();
+  const searchQuery = req.query.search as string | undefined;
+  const companies = getCompanies(searchQuery);
 
-  res.status(200).json({ data: companies });
+  if (companies.length === 0)
+    return res.status(HTTP_STATUS.NOT_FOUND).json({ data: [] });
+
+  res.status(HTTP_STATUS.OK).json({ data: companies });
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Company } from "../../../types/companies";
 import CompanyListItem from "./CompanyListItem/CompanyListItem";
 import CompanyListTitle from "../CompanyListTitle/CompanyListTitle";
+import EmptyCompanyList from "./EmptyCompanyList/EmptyCompanyList";
 import styles from "./CompanyList.module.css";
 
 interface CompanyListProps {
@@ -17,16 +18,20 @@ export default function CompanyList({ companies }: CompanyListProps) {
   return (
     <div>
       <CompanyListTitle />
-      <ul className={styles.list}>
-        {companies.map((company) => (
-          <CompanyListItem
-            key={company.companyId}
-            company={company}
-            isExpanded={expandedId === company.companyId}
-            onToggle={toggle}
-          />
-        ))}
-      </ul>
+      {companies.length === 0 ? (
+        <EmptyCompanyList />
+      ) : (
+        <ul className={styles.list}>
+          {companies.map((company) => (
+            <CompanyListItem
+              key={company.companyId}
+              company={company}
+              isExpanded={expandedId === company.companyId}
+              onToggle={toggle}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

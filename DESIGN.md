@@ -19,44 +19,32 @@ Changes were delivered in separate pull requests to keep each review focused and
 ```
 app/
   globals.css            ← global reset, body font/colour, font-weight baseline
-  page.tsx               ← client component (UI only, no fetch logic)
+  layout.tsx             ← root layout; applies Inter (latin) font to <body>
+  page.tsx               ← client component: search state, loading/error handling
   components/
     CompanyList/
       CompanyList.tsx           ← owns expand/collapse state; renders title + list
-      CompanyList.module.css
+      EmptyCompanyList/
+        EmptyCompanyList.tsx
       CompanyListItem/
         CompanyListItem.tsx     ← single row: header button + chevron
-        CompanyListItem.module.css
         CompanyItemIcon/
-          CompanyItemIcon.tsx   ← img vs initial placeholder
-          CompanyItemIcon.module.css
+          CompanyItemIcon.tsx   ← img and initial placeholder
         CompanyItemPanel/
           CompanyItemPanel.tsx  ← expandable details panel
-          CompanyItemPanel.module.css
           CompanyEventList/
             CompanyEventList.tsx        ← events list
-            CompanyEventList.module.css
     CompanyListTitle/
       CompanyListTitle.tsx      ← section label ("Trending companies")
-      CompanyListTitle.module.css
+    SearchBar/
+      SearchBar.tsx             ← debounced search input; fires callback after user pauses
     LoadingIndicator/
       LoadingIndicator.tsx
     ErrorMessage/
       ErrorMessage.tsx
   __tests__/
     page.test.tsx
-    components/           ← mirrors the components/ hierarchy
-      CompanyList/
-        CompanyList.test.tsx
-        CompanyListItem/
-          CompanyListItem.test.tsx
-          CompanyItemIcon/
-            CompanyItemIcon.test.tsx
-          CompanyItemPanel/
-            CompanyItemPanel.test.tsx
-          CompanyEventList/
-            CompanyEvent/
-              CompanyEvent.test.tsx
+    components/           ← all test files for UI components (mirrors the components/ hierarchy)
 
 data/
   companies.ts           ← raw static data, typed as CompaniesApiResponse
@@ -145,6 +133,11 @@ CompanyList              — owns expand/collapse state; the only stateful compo
 
 `expandedId` lives in `CompanyList` — the lowest component that needs it. Each `CompanyListItem` receives only `isExpanded: boolean` and `onToggle`, keeping items stateless and easy to test.
 
+### SearchBar (New feature)
+
+The `SearchBar` fires the parent-supplied `onSearchInputChanged` callback only after the user pauses typing, using a `setTimeout`-based debounce (default 300 ms). This prevents a network request on every keystroke.
+
+
 ### Early-return pattern in `page.tsx`
 
 `page.tsx` uses a `renderContent()` helper that returns exactly one of `<LoadingIndicator>`, `<ErrorMessage>`, or `<CompanyList>`. This makes it immediately clear that only one thing renders at a time, and the `<main>` wrapper is declared once.
@@ -152,6 +145,8 @@ CompanyList              — owns expand/collapse state; the only stateful compo
 ### CSS approach
 
 Each component has its own CSS Module scoped to that component's file. `font-weight: 400` is set once on `body` in `globals.css` and inherited everywhere, except `<dt>` elements which browsers default to bold and need an explicit override.
+
+The Inter (latin subset) font from `@next/font/google` is loaded in `layout.tsx` and applied as a `className` on `<body>`. Placing it in the root layout — rather than in `page.tsx` — ensures the font is applied to the entire application, including any future pages, without each page needing to import it separately.
 
 ### Test organisation
 
@@ -172,31 +167,6 @@ Component tests import `companies` from `data/companies.ts` rather than defining
 ## 5. Dependency changes
 
 `@types/*` packages and `typescript` are moved to `devDependencies` since they are only needed at compile time and are not required in the production bundle. Runtime dependencies (`next`, `react`, `react-dom`, `@next/font`) remain in `dependencies`.
-
----
-
-## Component design
-
-The UI is split into small, single-responsibility components. Each component owns only its own markup and styles via CSS Modules — no global class leakage.
-
-### `CompanyList`
-Owns the expand/collapse state (`expandedId`) and passes it down. Keeping state here rather than inside each item means only one panel can be open at a time with a single `useState`. Also renders the `CompanyListTitle` so the list is self-contained as a drop-in widget.
-
-### `CompanyListItem`
-Purely presentational — receives `company`, `isExpanded`, and `onToggle` as props. 
-
-### `CompanyListTitle`
-Thin wrapper around a `<p>` tag. 
-
-### `LoadingIndicator`
-Single-purpose component for the loading state.
-
-### `ErrorMessage`
-
-### CSS approach
-- CSS Modules per component — styles are scoped and co-located with the component file.
-- `font-weight: 400` is set once on `body` in `globals.css` and inherited, except for `<dt>` elements which browsers default to bold and need an explicit override.
-- Global styles (`globals.css`) cover only true globals: box model reset, body colours/font, and anchor defaults.
 
 ## 6. Assumptions
 

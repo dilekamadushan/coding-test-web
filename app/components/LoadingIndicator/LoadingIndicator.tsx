@@ -1,3 +1,5 @@
+import styles from "./LoadingIndicator.module.css";
+
 export default function LoadingIndicator() {
-  return <p>Loading...</p>;
+  return <div className={styles.centered}>Loading...</div>;
 }

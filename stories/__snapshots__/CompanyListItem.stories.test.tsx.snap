@@ -1,0 +1,293 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CompanyListItem stories renders Default story 1`] = `
+<div>
+  <li
+    class="item"
+  >
+    <button
+      aria-controls="item-panel-1"
+      aria-expanded="false"
+      class="header"
+    >
+      <span
+        class="iconWrapper"
+      >
+        <img
+          alt="OKEA logo"
+          class="icon"
+          data-nimg="1"
+          decoding="async"
+          height="40"
+          loading="lazy"
+          src="/_next/image?url=https%3A%2F%2Ffiles.quartr.com%2Fcompany-logos%2Fd0ba4-2022-12-14-09-26-56.png&w=96&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Ffiles.quartr.com%2Fcompany-logos%2Fd0ba4-2022-12-14-09-26-56.png&w=48&q=75 1x, /_next/image?url=https%3A%2F%2Ffiles.quartr.com%2Fcompany-logos%2Fd0ba4-2022-12-14-09-26-56.png&w=96&q=75 2x"
+          style="color: transparent;"
+          width="40"
+        />
+      </span>
+      <span
+        class="titleGroup"
+      >
+        <span
+          class="companyName"
+        >
+          OKEA
+        </span>
+        <span
+          class="description"
+        >
+          OKEA, an oil and gas company, engages in the development and production of oil and gas in the Norwegian continental shelf.
+        </span>
+      </span>
+      <span
+        aria-hidden="true"
+        class="chevron"
+      >
+        ›
+      </span>
+    </button>
+    <div
+      class="panel"
+      id="item-panel-1"
+    >
+      <dl
+        class="details"
+      >
+        <div
+          class="detailRow"
+        >
+          <dt>
+            Ticker
+          </dt>
+          <dd>
+            OKEA
+          </dd>
+        </div>
+        <div
+          class="detailRow"
+        >
+          <dt>
+            Country
+          </dt>
+          <dd>
+            NO
+          </dd>
+        </div>
+        <div
+          class="detailRow"
+        >
+          <dt>
+            Currency
+          </dt>
+          <dd>
+            NOK
+          </dd>
+        </div>
+        <div
+          class="detailRow"
+        >
+          <dt>
+            Info
+          </dt>
+          <dd>
+            <a
+              class="link"
+              href="https://www.okea.no/about/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              https://www.okea.no/about/
+            </a>
+          </dd>
+        </div>
+        <div
+          class="section"
+        >
+          <dt>
+            Events
+          </dt>
+          <dd>
+            <ul
+              class="events"
+            >
+              <li
+                class="event"
+              >
+                <span
+                  class="eventTitle"
+                >
+                  Q3 2022
+                </span>
+                <span
+                  class="eventMeta"
+                >
+                  2022-10-26T08:00:00.000Z
+                   · 
+                  Q3
+                   
+                  2022
+                </span>
+                <a
+                  class="link"
+                  href="https://files.quartr.com/reports/9aae0-2022-12-14-09-52-59.pdf"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  View Report
+                </a>
+              </li>
+            </ul>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </li>
+</div>
+`;
+
+exports[`CompanyListItem stories renders Expanded story 1`] = `
+<div>
+  <li
+    class="item"
+  >
+    <button
+      aria-controls="item-panel-1"
+      aria-expanded="true"
+      class="header"
+    >
+      <span
+        class="iconWrapper"
+      >
+        <img
+          alt="OKEA logo"
+          class="icon"
+          data-nimg="1"
+          decoding="async"
+          height="40"
+          loading="lazy"
+          src="/_next/image?url=https%3A%2F%2Ffiles.quartr.com%2Fcompany-logos%2Fd0ba4-2022-12-14-09-26-56.png&w=96&q=75"
+          srcset="/_next/image?url=https%3A%2F%2Ffiles.quartr.com%2Fcompany-logos%2Fd0ba4-2022-12-14-09-26-56.png&w=48&q=75 1x, /_next/image?url=https%3A%2F%2Ffiles.quartr.com%2Fcompany-logos%2Fd0ba4-2022-12-14-09-26-56.png&w=96&q=75 2x"
+          style="color: transparent;"
+          width="40"
+        />
+      </span>
+      <span
+        class="titleGroup"
+      >
+        <span
+          class="companyName"
+        >
+          OKEA
+        </span>
+        <span
+          class="description"
+        >
+          OKEA, an oil and gas company, engages in the development and production of oil and gas in the Norwegian continental shelf.
+        </span>
+      </span>
+      <span
+        aria-hidden="true"
+        class="chevron chevronOpen"
+      >
+        ›
+      </span>
+    </button>
+    <div
+      class="panel panelOpen"
+      id="item-panel-1"
+    >
+      <dl
+        class="details"
+      >
+        <div
+          class="detailRow"
+        >
+          <dt>
+            Ticker
+          </dt>
+          <dd>
+            OKEA
+          </dd>
+        </div>
+        <div
+          class="detailRow"
+        >
+          <dt>
+            Country
+          </dt>
+          <dd>
+            NO
+          </dd>
+        </div>
+        <div
+          class="detailRow"
+        >
+          <dt>
+            Currency
+          </dt>
+          <dd>
+            NOK
+          </dd>
+        </div>
+        <div
+          class="detailRow"
+        >
+          <dt>
+            Info
+          </dt>
+          <dd>
+            <a
+              class="link"
+              href="https://www.okea.no/about/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              https://www.okea.no/about/
+            </a>
+          </dd>
+        </div>
+        <div
+          class="section"
+        >
+          <dt>
+            Events
+          </dt>
+          <dd>
+            <ul
+              class="events"
+            >
+              <li
+                class="event"
+              >
+                <span
+                  class="eventTitle"
+                >
+                  Q3 2022
+                </span>
+                <span
+                  class="eventMeta"
+                >
+                  2022-10-26T08:00:00.000Z
+                   · 
+                  Q3
+                   
+                  2022
+                </span>
+                <a
+                  class="link"
+                  href="https://files.quartr.com/reports/9aae0-2022-12-14-09-52-59.pdf"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  View Report
+                </a>
+              </li>
+            </ul>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </li>
+</div>
+`;

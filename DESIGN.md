@@ -6,10 +6,13 @@ Changes were delivered in separate pull requests:
 ## Table of Contents
 
 1. [Project structure overview](#1-project-structure-overview)
-2. [TypeScript interfaces for the domain model](#2-typescript-interfaces-for-the-domain-model)
-3. [Dependency changes](#3-dependency-changes)
-4. [Code comments](#code-comments)
-5. [Assumptions](#4-assumptions)
+2. [Search feature](#search-feature)
+3. [Pagination](#pagination)
+4. [Unit tests and Story-driven snapshot testing](#snapshot-testing-for-ui-components)
+5. [TypeScript interfaces for the domain model](#2-typescript-interfaces-for-the-domain-model)
+6. [Dependency changes](#3-dependency-changes)
+7. [Code comments](#code-comments)
+8. [Assumptions](#4-assumptions)
 
 ## 1. Project structure overview
 
@@ -60,6 +63,39 @@ types/
   companies.ts           ← shared TypeScript interfaces
 ```
 
+
+### Snapshot testing for UI components
+
+Story-driven snapshot testing for checking UI regression to maintain quality of the UI and user experience.
+
+- Steps
+  - 1. Add or update stories in the `stories/` folder to represent all important UI states.
+  - 2. Run `npm run test:snapshots` to check for changes.
+  - 3. If a change is intentional, run `npm run test:snapshots:update` to update the stored snapshots.
+
+All stories and their snapshot tests are kept in the `stories/` folder for consistency and discoverability.
+
+### Tests
+
+Component tests mirror the source tree under `app/__tests__/components/` — including `Companies/Companies.test.tsx` for the feature-level integration tests. Backend and service tests stay co-located with their source (`pages/api/__tests__/`, `services/__tests__/`).
+
+`page.tsx` has no logic of its own so it has no test file.
+
+Component tests use real data from `data/companies.ts` rather than synthetic mocks — real data has edge cases like trailing whitespace and `null` fields that inline fixtures miss.
+
+---
+
+
+### SearchBar
+
+Fires `onSearchInputChanged` only after the user pauses typing (300 ms debounce), so the API isn't called on every keystroke. The timer is stored in a `useRef` so it survives re-renders. The input goes `readOnly` while a state is loading.
+
+### Pagination
+
+The current dataset is small (5 companies), but the architecture is designed for a much larger real-world load where returning every record in a single response is not viable.
+
+Pagination is implemented end-to-end across every layer:
+
 ## 2. TypeScript interfaces for the domain model
 
 All layers import from `types/` — so field rename is caught by the compiler everywhere at once.
@@ -74,9 +110,6 @@ Optional fields (`iconUrl`, `qnaTimestamp`) are typed as `string | null` rather 
 
 `expandedId` lives in `CompanyList` — the lowest component that needs it. Items receive only `isExpanded` and `onToggle`, keeping them stateless.
 
-### SearchBar
-
-Fires `onSearchInputChanged` only after the user pauses typing (300 ms debounce), so the API isn't called on every keystroke. The timer is stored in a `useRef` so it survives re-renders. The input goes `readOnly` while a state is loading.
 
 
 ### `page.tsx` as a routing artifact
@@ -93,12 +126,6 @@ All feature components use `"use client"`. The motivation:
 - **Testability.** Client Components render predictably in Jest + RTL without a server runtime. 
 - **Simpler mental model.** The team can reason about the entire component tree as standard React without tracking which components run where.
 
-
-### Pagination
-
-The current dataset is small (5 companies), but the architecture is designed for a much larger real-world load where returning every record in a single response is not viable.
-
-Pagination is implemented end-to-end across every layer:
 
 ### `React.memo` and `useCallback`
 
@@ -119,15 +146,6 @@ Inter (latin) is loaded in `layout.tsx` so it applies to the whole app, not per-
 - **`useRef` over `useState`** — a one-liner above `searchQueryRef` explains the choice to avoid a re-render.
 - **`useEffect` empty dependency array** — an inline `eslint-disable` comment explains that `searchCompanies` is intentionally omitted to prevent an infinite fetch loop on every render.
 
-### Tests
-
-Component tests mirror the source tree under `app/__tests__/components/` — including `Companies/Companies.test.tsx` for the feature-level integration tests. Backend and service tests stay co-located with their source (`pages/api/__tests__/`, `services/__tests__/`).
-
-`page.tsx` has no logic of its own so it has no test file.
-
-Component tests use real data from `data/companies.ts` rather than synthetic mocks — real data has edge cases like trailing whitespace and `null` fields that inline fixtures miss.
-
----
 
 ## 3. Dependency changes
 

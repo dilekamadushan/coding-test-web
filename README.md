@@ -1,84 +1,162 @@
-# Before you begin
+# Design Considerations
 
-Before you start, we want to clarify expectations to ensure this assignment is a valuable use of your time and ours.
+Changes were delivered in separate pull requests:
+[View closed pull requests →](https://github.com/dilekamadushan/coding-test-web/pulls?q=is%3Apr+is%3Aclosed)
 
-There is no time constraint on this task. We’re not evaluating how quickly you can produce something - we’re evaluating how you think and how you build.
+## Table of Contents
 
-The assignment itself is intentionally simple and narrowly scoped. However, we expect your solution to reflect a production-ready mindset.
+1. [Project structure overview](#project-structure-overview)
+2. [Unit tests and Story-driven snapshot testing](#unit-tests-and-story-driven-snapshot-testing)
+3. [SearchBar](#searchbar)
+4. [Pagination](#pagination)
+5. [TypeScript interfaces for the domain model](#2-typescript-interfaces-for-the-domain-model)
+6. [State co-location](#state-co-location)
+7. [page.tsx as a routing artifact](#pagetsx-as-a-routing-artifact)
+8. [Client components for all features](#client-components-for-all-features)
+9. [React.memo and useCallback](#reactmemo-and-usecallback)
+10. [CSS](#css)
+11. [Code comments](#code-comments)
+12. [Dependency changes](#3-dependency-changes)
+13. [Assumptions](#4-assumptions)
 
-When reviewing your submission, we will focus on:
+## 1. Project structure overview
 
-* Clear structure and sound architecture
-* Thoughtful abstractions
-* Good naming, readability, and maintainability
-* Handling of edge cases
-* Sensible trade-offs and reasoning
-* Code quality that would scale in a larger application
+| Layer | Responsibility |
+| --- | --- |
+| `types/` | Shared types (typescript interfaces)
+| `data/` | Raw static data
+| `lib/` | Backend business logic |
+| `pages/api/` | HTTP layer — calls `lib/`, sends response |
+| `services/` | Frontend fetch — calls the API, no UI |
+| `app/components/` | UI components
 
-We’re less interested in “just making it work” and more interested in understanding how you approach building something clean, extensible, and robust. The devil is in the details and that is very important to us.
-
-If anything in the brief is unclear, please don’t hesitate to ask clarifying questions, we’re happy to provide additional context. We will not give out details on how you should implement this.
-
-## A note about the current codebase
-
-This project is intentionally provided in an outdated and suboptimal state by default.
-
-Parts of the structure, patterns, and implementation choices may feel old, inconsistent, or poorly organized. This is deliberate. The goal is not only to implement the required feature, but also to:
-
-* Identify structural issues
-* Improve readability and maintainability
-* Apply modern best practices where appropriate
-
-Make thoughtful decisions about what should (and should not) be refactored
-
-You are free to refactor, restructure, or modernize the project as you see fit, as long as you can clearly explain your reasoning and trade-offs during the technical discussion.
-
-## Installation
-
-This project is based on NextJS 13, and requires node 16.13.0 or higher.
-
-**Installation**
+---
 
 ```
-npm install
+app/
+  page.tsx               ← route entry point; delegates to <Companies>
+  components/
+    Companies/
+      Companies.tsx         ← "use client"; owns all search, pagination
+    CompanyList/
+      CompanyList.tsx           ← owns expand/collapse state; renders title + list
+      ... all sub ui components
+    SearchBar/
+      SearchBar.tsx             ← debounced search input; fires callback after user pauses
+  __tests__/
+    components/           ← all test files for UI components (mirrors the components/ hierarchy)
+
+data/
+  companies.ts           ← raw static data
+
+lib/
+  companies.ts           ← backend service: business logic over the data layer
+
+pages/
+  api/
+    companies.ts         ← Next.js API route (HTTP layer only)
+    __tests__/
+      companies.test.ts
+
+services/
+  companies.ts           ← frontend fetch abstraction
+  __tests__/
+    companies.test.ts
+
+types/
+  companies.ts           ← shared TypeScript interfaces
 ```
 
-**Running the application**
+## Unit tests and Story-driven snapshot testing
+I have implemented unit tests and story driven snapshot testing to make sure all the code is covered and has a strong foundation for robust application and smooth UI experience
 
-```
-npm run dev
-```
+### Unit Tests
 
-## Your assignment
+Component tests mirror the source tree under `app/__tests__/components/` — including `Companies/Companies.test.tsx` for the feature-level integration tests. Backend and service tests stay co-located with their source (`pages/api/__tests__/`, `services/__tests__/`).
 
-We are going to display a list of trending companies on our start page, your assigment is to create a list of companies that we can display on our start page. The design is not complete, but should give you a good idea on what direction to take. The code provided is functional, but it’s difficult to read and understand. It needs significant refactoring to improve its structure and maintainability.
+`page.tsx` has no logic of its own so it has no test file.
 
-You can find a link to the Figma [here](https://www.figma.com/file/PWNtHgOgjeYYGmQIYpLkm4/Quartr?node-id=0%3A1&t=49UGjItn5gFyMAku-0).
+Component tests use real data from `data/companies.ts` rather than synthetic mocks — real data has edge cases like trailing whitespace and `null` fields that inline fixtures miss.
 
-## Instructions
+---
 
-You can make any modifications or suggestions for modifications that you see fit. Fork this repository and deliver your results via a pull-request or send us an e-mail. You could also create a gist, for privacy reasons, and send us the link.
 
-During a technical interview, we will discuss this task and have a closer look at the code together with you. You should be able to explain your considerations of the code implementation. 
+### Story driven UI regression testing
 
-## Completion time
+- Story-driven snapshot testing for checking UI regression to maintain quality of the UI and user experience.
 
-The time you spend on this test is not limited. The idea is to take your time, respect the assignment, and send us the result when you are happy with it. But please let us know if there are circumstances delaying your submission of the code. 
+- Steps
+  - 1. Add or update stories in the `stories/` folder to represent all important UI states.
+  - 2. Run `npm run test:snapshots` to check for changes.
+  - 3. If a change is intentional, run `npm run test:snapshots:update` to update the stored snapshots.
 
-## What we expect
+All stories and their snapshot tests are kept in the `stories/` folder for consistency and discoverability.
 
-- A clean and well-structured readable code, where it is easy to understand what is going on
-- Organizing the code in a way where every function or component is responsible for only one thing
-- Usage of Typescript, and good practices using interfaces where needed
 
-## Appreciated with the implementation
+### SearchBar
 
-⚠️ Those are not required, but can give you some advice how to make your task look even better.
+Fires `onSearchInputChanged` only after the user pauses typing (300 ms debounce), so the API isn't called on every keystroke. The timer is stored in a `useRef` so it survives re-renders. The input goes `readOnly` while a state is loading.
 
-- Unit and functional tests: a 100% coverage is not necessary, just make them pertinent
-- Good accessibility practices
-- Usage of the state co-location pattern
+### Pagination
 
-Technical constraints
+The current dataset is small (5 companies), but the architecture is designed for a much larger real-world load where returning every record in a single response is not viable.
 
-- Use React 17+ and TypeScript
+Pagination is implemented end-to-end across every layer:
+
+## 2. TypeScript interfaces for the domain model
+
+All layers import from `types/` — so field rename is caught by the compiler everywhere at once.
+
+- `Company` — core entity used by every layer
+- `ApiResponse<T>` — reusable interface to handle API response
+
+Optional fields (`iconUrl`, `qnaTimestamp`) are typed as `string | null` rather than `?`, so consumers need to handle the null case.
+---
+
+### State co-location
+
+`expandedId` lives in `CompanyList` — the lowest component that needs it. Items receive only `isExpanded` and `onToggle`, keeping them stateless.
+
+
+
+### `page.tsx` as a routing artifact
+
+In the Next.js App Router, `page.tsx` defines the route segment — it's a framework file, not a feature file.
+
+
+
+### Client components for all features
+
+All feature components use `"use client"`. The motivation:
+
+- Every feature requires interactivity hence client components were used
+- The team can reason about the entire component tree as standard React without tracking which components run where.
+
+
+### `React.memo` and `useCallback`
+
+I didn't use them, intentionally for this scope of the project,
+
+`React.memo` and `useCallback` are only useful together
+The best candidate for using this is `CompanyListItem` + `useCallback` for `toggle` in `CompanyList`: toggling one item causes all siblings to re-render. With a page size of ≤10 and since cheap renders I decided against it.
+
+### CSS
+
+CSS Modules over Tailwind/Bootstrap:
+- Built into Next.js — no extra packages or PostCSS config
+
+Inter (latin) is loaded in `layout.tsx` so it applies to the whole app, not per-page.
+
+### Code comments
+
+- **`useRef` over `useState`** — a one-liner above `searchQueryRef` explains the choice to avoid a re-render.
+- **`useEffect` empty dependency array** — an inline `eslint-disable` comment explains that `searchCompanies` is intentionally omitted to prevent an infinite fetch loop on every render.
+
+
+## 3. Dependency changes
+
+`@types/*` and `typescript` moved to `devDependencies` — not needed in the production bundle.
+
+## 4. Assumptions
+
+- Translations are not supported at this release
